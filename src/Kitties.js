@@ -30,7 +30,6 @@ export default function Kitties (props) {
         // The amounts of all kitties.
         const kittyIds = Array.from(Array(parseInt(cnt, 10)), (v, k) => k)
         // The owners of all kitties.
-        debugger
         api.query.substrateKitties.owner.multi(kittyIds, kittyOwners => {
           setKittyOwners(kittyOwners)
         }).catch(console.error)
@@ -80,7 +79,7 @@ export default function Kitties (props) {
         <TxButton
           accountPair={accountPair} label='创建加密猫' type='SIGNED-TX' setStatus={setStatus}
           attrs={{
-            palletRpc: 'kittiesModule',
+            palletRpc: 'substrateKitties',
             callable: 'create',
             inputParams: [],
             paramFields: []

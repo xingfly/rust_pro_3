@@ -22,9 +22,9 @@ const TransferModal = props => {
 
   return <Modal onClose={() => setOpen(false)} onOpen={() => setOpen(true)} open={open}
     trigger={<Button basic color='blue'>转让</Button>}>
-    <Modal.Header>毛孩转让</Modal.Header>
+    <Modal.Header>加密猫转让</Modal.Header>
     <Modal.Content><Form>
-      <Form.Input fluid label='毛孩 ID' readOnly value={kitty.id}/>
+      <Form.Input fluid label='加密猫 ID' readOnly value={kitty.id}/>
       <Form.Input fluid label='转让对象' placeholder='对方地址' onChange={formChange('target')}/>
     </Form></Modal.Content>
     <Modal.Actions>
@@ -33,7 +33,7 @@ const TransferModal = props => {
         accountPair={accountPair} label='确认转让' type='SIGNED-TX' setStatus={setStatus}
         onClick={confirmAndClose}
         attrs={{
-          palletRpc: 'kittiesModule',
+          palletRpc: 'substrateKitties',
           callable: 'transfer',
           inputParams: [formValue.target, kitty.id],
           paramFields: [true, true]
