@@ -12,6 +12,11 @@ export default function Kitties (props) {
 
   const [kitties, setKitties] = useState([])
   const [status, setStatus] = useState('')
+    // Kitties' DNAs
+    const [kittyDNAs, setKittyDNAs] = useState([])
+    // Kitties' Owners
+    const [kittyOwners, setKittyOwners] = useState([])
+  
 
   const fetchKitties = () => {
     // TODO: 在这里调用 `api.query.kittiesModule.*` 函数去取得猫咪的信息。
@@ -19,6 +24,26 @@ export default function Kitties (props) {
     //   - 共有多少只猫咪
     //   - 每只猫咪的主人是谁
     //   - 每只猫咪的 DNA 是什么，用来组合出它的形态
+    let unsubscribe
+    api.query.substrateKitties.kittiesCount(cnt => {
+      if (!cnt.isNone) {
+        // The amounts of all kitties.
+        const kittyIds = Array.from(Array(parseInt(cnt, 10)), (v, k) => k)
+        // The owners of all kitties.
+        debugger
+        api.query.substrateKitties.owner.multi(kittyIds, kittyOwners => {
+          setKittyOwners(kittyOwners)
+        }).catch(console.error)
+        // The DNAs of all kitties.
+        api.query.substrateKitties.kitties.multi(kittyIds, kittyDna => {
+          setKittyDNAs(kittyDna)
+        }).catch(console.error)
+      }
+    }).then(unsub => {
+      unsubscribe = unsub
+    }).catch(console.error)
+
+    return () => unsubscribe && unsubscribe()
   }
 
   const populateKitties = () => {
@@ -32,19 +57,28 @@ export default function Kitties (props) {
     //  ```
     // 这个 kitties 会传入 <KittyCards/> 然后对每只猫咪进行处理
     const kitties = []
+    console.log("kittyDNAs")
+    console.log(kittyDNAs)
+    for (let i = 0; i < kittyDNAs.length; ++i) {
+      const kitty = {}
+      kitty.id = i
+      kitty.dna = kittyDNAs[i].unwrap()
+      kitty.owner = keyring.encodeAddress(kittyOwners[i].unwrap())
+      kitties[i] = kitty
+    }
     setKitties(kitties)
   }
 
   useEffect(fetchKitties, [api, keyring])
-  useEffect(populateKitties, [])
+  useEffect(populateKitties, [keyring,kittyDNAs,kittyOwners])
 
   return <Grid.Column width={16}>
-    <h1>小毛孩</h1>
+    <h1>加密猫</h1>
     <KittyCards kitties={kitties} accountPair={accountPair} setStatus={setStatus}/>
     <Form style={{ margin: '1em 0' }}>
       <Form.Field style={{ textAlign: 'center' }}>
         <TxButton
-          accountPair={accountPair} label='创建小毛孩' type='SIGNED-TX' setStatus={setStatus}
+          accountPair={accountPair} label='创建加密猫' type='SIGNED-TX' setStatus={setStatus}
           attrs={{
             palletRpc: 'kittiesModule',
             callable: 'create',

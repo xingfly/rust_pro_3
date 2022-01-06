@@ -84,7 +84,7 @@ const IMAGES = {
 }
 
 const dnaToAttributes = dna => {
-  const attribute = (index, type) => IMAGES[type][dna[index] % IMAGES[type].length]
+  const attribute = (index, type) => IMAGES[type][dna.dna[index] % IMAGES[type].length]
 
   return {
     body: attribute(0, 'body'),

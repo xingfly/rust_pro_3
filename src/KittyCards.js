@@ -48,7 +48,7 @@ const TransferModal = props => {
 const KittyCard = props => {
   const { kitty, accountPair, setStatus } = props
   const { id = null, dna = null, owner = null } = kitty
-  const displayDna = dna && dna.join(', ')
+  const displayDna = dna
   const displayId = id === null ? '' : (id < 10 ? `0${id}` : id.toString())
   const isSelf = accountPair.address === kitty.owner
 
@@ -56,14 +56,14 @@ const KittyCard = props => {
     { isSelf && <Label as='a' floating color='teal'>我的</Label> }
     <KittyAvatar dna={dna} />
     <Card.Content>
-      <Card.Header>ID 号: {displayId}</Card.Header>
+      <Card.Header>ID: {displayId}</Card.Header>
       <Card.Meta style={{ overflowWrap: 'break-word' }}>
         基因: <br/>
         {displayDna}
       </Card.Meta>
       <Card.Description>
         <p style={{ overflowWrap: 'break-word' }}>
-          猫奴:<br/>
+          主人:<br/>
           {owner}
         </p>
       </Card.Description>
@@ -80,7 +80,7 @@ const KittyCards = props => {
 
   if (kitties.length === 0) {
     return <Message info>
-      <Message.Header>现在连一只毛孩都木有，赶快创建一只&nbsp;
+      <Message.Header>现在连一只加密猫都木有，赶快创建一只&nbsp;
         <span role='img' aria-label='point-down'>👇</span>
       </Message.Header>
     </Message>
