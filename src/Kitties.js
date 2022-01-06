@@ -12,9 +12,7 @@ export default function Kitties (props) {
 
   const [kitties, setKitties] = useState([])
   const [status, setStatus] = useState('')
-    // Kitties' DNAs
     const [kittyDNAs, setKittyDNAs] = useState([])
-    // Kitties' Owners
     const [kittyOwners, setKittyOwners] = useState([])
   
 
@@ -27,13 +25,13 @@ export default function Kitties (props) {
     let unsubscribe
     api.query.substrateKitties.kittiesCount(cnt => {
       if (!cnt.isNone) {
-        // The amounts of all kitties.
+        // 取出加密猫的总数（从0开始）并生成数组
         const kittyIds = Array.from(Array(parseInt(cnt, 10)), (v, k) => k)
-        // The owners of all kitties.
+        // 查询加密猫们的主人
         api.query.substrateKitties.owner.multi(kittyIds, kittyOwners => {
           setKittyOwners(kittyOwners)
         }).catch(console.error)
-        // The DNAs of all kitties.
+        // 查询加密猫们的DNA
         api.query.substrateKitties.kitties.multi(kittyIds, kittyDna => {
           setKittyDNAs(kittyDna)
         }).catch(console.error)
@@ -46,18 +44,7 @@ export default function Kitties (props) {
   }
 
   const populateKitties = () => {
-    // TODO: 在这里添加额外的逻辑。你需要组成这样的数组结构：
-    //  ```javascript
-    //  const kitties = [{
-    //    id: 0,
-    //    dna: ...,
-    //    owner: ...
-    //  }, { id: ..., dna: ..., owner: ... }]
-    //  ```
-    // 这个 kitties 会传入 <KittyCards/> 然后对每只猫咪进行处理
     const kitties = []
-    console.log("kittyDNAs")
-    console.log(kittyDNAs)
     for (let i = 0; i < kittyDNAs.length; ++i) {
       const kitty = {}
       kitty.id = i
